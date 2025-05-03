@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Movie World</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2184/2184561.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div id="mainMenu" class="center">
+    <h1>🎬 مرحبًا بك في مقترح الترفيه</h1>
+    <button onclick="openSection('movie')">🎬 اقتراح فيلم</button>
+    <button onclick="openSection('tv')">📺 اقتراح مسلسل</button>
+  </div>
+
+  <div id="movieSection" class="hidden">
+    <button class="backBtn" onclick="goBack()">⬅️ رجوع</button>
+    <h2>اختر نوع الفيلم</h2>
+    <div id="movieGenres" class="genre-buttons"></div>
+    <div id="movieResult" class="result-box-container"></div>
+  </div>
+
+  <div id="tvSection" class="hidden">
+    <button class="backBtn" onclick="goBack()">⬅️ رجوع</button>
+    <h2>اختر نوع المسلسل</h2>
+    <div id="tvGenres" class="genre-buttons"></div>
+    <div id="tvResult" class="result-box-container"></div>
+  </div>
+
+  <!-- إضافة حقوق المبرمج هنا -->
+  <footer class="footer">
+    <p>تم البرمجة بواسطة <strong>حسين</strong></p>
+    <p>للتواصل: <a href="https://t.me/Hussein_dsi" target="_blank">حسين على تيليجرام</a></p>
+  </footer>
+</body>
+</html>
