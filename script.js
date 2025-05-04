@@ -1,4 +1,4 @@
-const API_KEY = 'f8d45824353e5f41247bdda8de4c3b43'; // مفتاح API
+const API_KEY = 'f8d45824353e5f41247bdda8de4c3b43';
 
 const GENRES = {
   "🎞️ أكشن": 28,
@@ -72,7 +72,7 @@ async function fetchRandomItem(type, genreId, genreName) {
     const detailsRes = await fetch(detailsUrl);
     const details = await detailsRes.json();
 
-    const title = details.title || details.name || 'غير متوفر';  // الاسم باللغة الإنجليزية
+    const title = details.title || details.name || 'غير متوفر';
     const rating = details.vote_average || '؟';
     const release = details.release_date || details.first_air_date || '؟';
     const runtime = details.runtime || (details.episode_run_time ? details.episode_run_time[0] : '؟');
@@ -80,7 +80,6 @@ async function fetchRandomItem(type, genreId, genreName) {
     const cast = details.credits.cast.slice(0, 5).map(actor => actor.name).join(', ') || 'غير متوفر';
     const overview = details.overview || 'لا يوجد ملخص.';
 
-    // الآن سنترجم الوصف إلى العربية
     const translatedOverview = await translateToArabic(overview);
 
     resultBox.innerHTML = `
@@ -103,10 +102,29 @@ async function fetchRandomItem(type, genreId, genreName) {
   }
 }
 
-// دالة لترجمة النص إلى اللغة العربية
 async function translateToArabic(text) {
-  const translateUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|ar`;
-  const res = await fetch(translateUrl);
-  const data = await res.json();
-  return data.responseData.translatedText || '⚠️ تعذر الترجمة.';
+  const encodedText = encodeURIComponent(text);
+  const translateUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodedText}`;
+
+  async function attemptTranslation(attempt = 1) {
+    try {
+      const res = await fetch(translateUrl);
+      const data = await res.json();
+      
+      if (res.status === 429 && attempt <= 3) {
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        return attemptTranslation(attempt + 1);
+      }
+      
+      return data[0][0][0] || '⚠️ تعذر الترجمة.';
+    } catch (err) {
+      if (attempt <= 3) {
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        return attemptTranslation(attempt + 1);
+      }
+      return '⚠️ تعذر الترجمة.';
+    }
+  }
+
+  return attemptTranslation();
 }
